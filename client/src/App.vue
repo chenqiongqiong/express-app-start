@@ -2,7 +2,7 @@
   <div id="app">
     <el-button>123</el-button>
     <img alt="Vue logo" src="./assets/logo.png" @click="request">
-    <HelloWorld msg="W  elcome to Your V123ue.js App"/>
+    <HelloWorld msg="W  elcome to Your Vue.js App-hello world"/>
     <router-link to="/foo">Go to Foo</router-link>
     <router-link to="/bar">Go   to Bar</router-link>
     <div>below is router view</div>
