@@ -16,6 +16,12 @@ const connection = mysql.createConnection({
   password: 'qiong666',
 });
 
+
+connection.connect((err) => {
+  if (err) throw err;
+  console.log('Connected!');
+});
+
 app.get('/api/sql', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   const sql = `insert into test.test_table_1 (name) values ("${new Date().toString()}")`;
@@ -28,7 +34,8 @@ app.get('/api/sql', (req, res) => {
   });
 });
 
-app.get(/^bee\/portal/, (req, res) => {
+// app.get(/^bee\/portal.*/, (req, res) => {
+app.get('/bee/portal', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
 
