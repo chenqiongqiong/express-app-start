@@ -1,0 +1,10 @@
+/build/
+/config/
+/dist/
+/*.js
+src/assets/utils/*.js
+src/polyfill/index.js
+src/pages/FormComponents/WmsFrom/common/*.js
+src/pages/FormComponents/MyAppList.vue
+src/pages/AppList/YeWuJiHua.vue
+src/pages/ChildSysOrder/EmployeeOrder/Portal/Organization.js

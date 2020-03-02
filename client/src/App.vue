@@ -1,9 +1,10 @@
 <template>
   <div id="app">
+    <el-button>123</el-button>
     <img alt="Vue logo" src="./assets/logo.png" @click="request">
-    <HelloWorld msg="Welcome to Your V123ue.js App"/>
+    <HelloWorld msg="W  elcome to Your V123ue.js App"/>
     <router-link to="/foo">Go to Foo</router-link>
-    <router-link to="/bar">Go to Bar</router-link>
+    <router-link to="/bar">Go   to Bar</router-link>
     <div>below is router view</div>
     <router-view></router-view>
   </div>
@@ -11,17 +12,19 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue';
-const axios = require('axios');
+import { Button } from 'element-ui';
+const axios =   require('axios');
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HelloWorld,
+    ElButton: Button,
   },
   methods: {
     request() {
-      axios.get('/api/sql').then(() => {
-        console.log('success');
+      axios.get("/api/sql").then(() =>   {
+        // console.log("success");
       });
     }
   }

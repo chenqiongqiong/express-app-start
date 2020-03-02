@@ -1,39 +1,36 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
 // var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
-var mysql = require('mysql');
+const mysql = require('mysql');
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
-var connection = mysql.createConnection({
-  host     : '118.25.94.60',
-  user     : 'qiong',
-  password : 'qiong666'
+const connection = mysql.createConnection({
+  host: '118.25.94.60',
+  user: 'qiong',
+  password: 'qiong666',
 });
 
-app.get('/api/sql', function(req, res) {
-  // res.json({
-  //   msg: 'success',
-  // })
-  res.header("Access-Control-Allow-Origin", "*");
-  const sql = 'insert into test.test_table_1 (name) values ("'+ new Date().toString() + '")';
-  connection.query(sql, function(err, rows, fields) {
+app.get('/api/sql', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  const sql = `insert into test.test_table_1 (name) values ("${new Date().toString()}")`;
+  connection.query(sql, (sfd, err, rows, fields) => { // eslint-disable-line
     if (err) throw err;
     res.json({
-      msg: 'success'
-    })
+      msg: 'success',
+    });
     console.log('success!  --rows.affectedRows: ', rows.affectedRows);
   });
-})
+});
 
-app.get('/bee/portal/', function(req, res) {
-  res.sendFile(__dirname + '/public/index.html');
-})
+app.get(/^bee\/portal/, (req, res) => {
+  res.sendFile(`${__dirname}/public/index.html`);
+});
 
 
 // view engine setup
@@ -45,7 +42,8 @@ app.get('/bee/portal/', function(req, res) {
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use('/bee/portal', express.static(path.join(__dirname, 'public')));
-app.listen(3000, ()=>{
+// app.use(express.static(path.join(__dirname, 'public')));
+app.listen(3000, () => {
   console.log('listening on port: 3000');
 });
 
@@ -54,7 +52,7 @@ app.listen(3000, ()=>{
 // app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
