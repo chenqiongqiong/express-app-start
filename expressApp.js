@@ -11,7 +11,7 @@ const mysql = require('mysql');
 const app = express();
 
 const connection = mysql.createConnection({
-  host: '118.25.94.60',
+  host: 'localhost',
   user: 'qiong',
   password: 'qiong666',
 });
@@ -19,9 +19,9 @@ const connection = mysql.createConnection({
 app.get('/api/sql', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   const sql = `insert into test.test_table_1 (name) values ("${new Date().toString()}")`;
-  connection.query(sql, (sfd, err, rows, fields) => { // eslint-disable-line
+  connection.query(sql, (err, rows, fields) => { // eslint-disable-line
     if (err) throw err;
-    res.json({
+    res.status(200).json({
       msg: 'success',
     });
     console.log('success!  --rows.affectedRows: ', rows.affectedRows);
@@ -38,7 +38,7 @@ app.get(/^bee\/portal/, (req, res) => {
 // app.set('view engine', 'jade');
 
 // app.use(logger('dev'));
-// app.use(express.json());
+app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use('/bee/portal', express.static(path.join(__dirname, 'public')));
