@@ -16,19 +16,26 @@ const connection = mysql.createConnection({
   password: 'qiong666',
 });
 
+
+connection.connect((err) => {
+  if (err) throw err;
+  console.log('Connected!');
+});
+
 app.get('/api/sql', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   const sql = `insert into test.test_table_1 (name) values ("${new Date().toString()}")`;
-  connection.query(sql, (sfd, err, rows, fields) => { // eslint-disable-line
+  connection.query(sql, (err, rows, fields) => { // eslint-disable-line
     if (err) throw err;
-    res.json({
+    res.status(200).json({
       msg: 'success',
     });
     console.log('success!  --rows.affectedRows: ', rows.affectedRows);
   });
 });
 
-app.get(/^bee\/portal/, (req, res) => {
+// app.get(/^bee\/portal.*/, (req, res) => {
+app.get('/bee/portal', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
 
@@ -38,7 +45,7 @@ app.get(/^bee\/portal/, (req, res) => {
 // app.set('view engine', 'jade');
 
 // app.use(logger('dev'));
-// app.use(express.json());
+app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use('/bee/portal', express.static(path.join(__dirname, 'public')));
