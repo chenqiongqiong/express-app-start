@@ -11,7 +11,7 @@ const mysql = require('mysql');
 const app = express();
 
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: '118.25.94.60',
   user: 'qiong',
   password: 'qiong666',
 });
@@ -34,12 +34,6 @@ app.get('/api/sql', (req, res) => {
   });
 });
 
-// app.get(/^bee\/portal.*/, (req, res) => {
-app.get('/bee/portal', (req, res) => {
-  res.sendFile(`${__dirname}/public/index.html`);
-});
-
-
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
@@ -49,11 +43,13 @@ app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use('/bee/portal', express.static(path.join(__dirname, 'public')));
-// app.use(express.static(path.join(__dirname, 'public')));
 app.listen(3000, () => {
   console.log('listening on port: 3000');
 });
 
+app.get(/^\/bee\/portal.*/, (req, res) => {
+  res.sendFile(`${__dirname}/public/index.html`);
+});
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
