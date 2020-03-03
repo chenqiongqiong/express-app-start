@@ -48,7 +48,7 @@ app.listen(3000, () => {
 });
 
 app.get(/^\/bee\/portal.*/, (req, res) => {
-  res.sendFile(`${__dirname}/public/index.html`);
+  res.sendFile(`${__dirname}/static/index.html`);
 });
 
 // app.use('/', indexRouter);

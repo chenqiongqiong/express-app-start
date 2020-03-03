@@ -1,4 +1,5 @@
-var path = require('path');
+const path = require('path');
+
 module.exports = {
   publicPath: '/bee/ppp',
   devServer: {
@@ -9,8 +10,8 @@ module.exports = {
         // pathRewrite: {
         //   '^/api': '/api'
         // }
-      }
-    }
+      },
+    },
   },
   outputDir: path.join(__dirname, '../public'),
-}
+};
