@@ -42,7 +42,7 @@ app.get('/api/sql', (req, res) => {
 app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
-app.use('/bee/portal', express.static(path.join(__dirname, 'public')));
+app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
 app.listen(3000, () => {
   console.log('listening on port: 3000');
 });

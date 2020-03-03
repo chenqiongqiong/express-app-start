@@ -11,5 +11,5 @@ module.exports = {
       }
     }
   },
-  outputDir: '../public'
+  outputDir: '../static'
 }
