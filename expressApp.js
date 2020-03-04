@@ -1,50 +1,24 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const router = require('./routes/index.js');
 // var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
-const mysql = require('mysql');
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 
 const app = express();
 
-const connection = mysql.createConnection({
-  host: '118.25.94.60',
-  user: 'qiong',
-  password: 'qiong666',
-});
-
-
-connection.connect((err) => {
-  if (err) throw err;
-  console.log('Connected!');
-});
-
-app.get('/api/sql', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  const sql = `insert into test.test_table_1 (name) values ("${new Date().toString()}")`;
-  connection.query(sql, (err, rows, fields) => { // eslint-disable-line
-    if (err) throw err;
-    res.status(200).json({
-      msg: 'success',
-    });
-    console.log('success!  --rows.affectedRows: ', rows.affectedRows);
-  });
-});
-
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+app.use('/api', router);
 
 // app.use(logger('dev'));
 app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
-app.listen(3000, () => {
-  console.log('listening on port: 3000');
+app.listen(5000, () => {
+  console.log('listening on port: 5000');
 });
 
 app.get(/^\/bee\/portal.*/, (req, res) => {

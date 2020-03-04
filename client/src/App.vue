@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <el-button>123</el-button>
+    <el-input v-model="content" />
     <img alt="Vue logo" src="./assets/logo.png" @click="request">
     <HelloWorld msg="W  elcome to Your Vue.js App-hello world"/>
     <router-link to="/foo">Go to Foo</router-link>
@@ -11,7 +12,7 @@
 </template>
 
 <script>
-import { Button } from 'element-ui';
+import { Button, Input } from 'element-ui';
 import HelloWorld from './components/HelloWorld.vue';
 
 const axios = require('axios');
@@ -21,10 +22,16 @@ export default {
   components: {
     HelloWorld,
     ElButton: Button,
+    ElInput: Input,
+  },
+  data() {
+    return {
+      content: null,
+    };
   },
   methods: {
     request() {
-      axios.get('/api/sql', { params: { name: 'hello', age: 12 } }).then(() => {
+      axios.get('/api/notesAdd', { params: { name: 'hello', age: 12, content: this.content } }).then(() => {
         // console.log("success");
       });
     },
