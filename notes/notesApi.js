@@ -20,4 +20,17 @@ module.exports = {
       });
     });
   },
+  notesAll: (req, res, next) => {
+    pool.getConnection((err, connection) => {
+      connection.query($sql.notesAll, [], (error, result) => {
+        if (result) {
+          res.json({
+            msg: 'success',
+            result,
+          });
+          connection.release();
+        }
+      });
+    });
+  },
 };

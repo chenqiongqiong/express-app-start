@@ -1,40 +1,53 @@
 <template>
   <div id="app">
-    <el-button>123</el-button>
-    <el-input v-model="content" />
+    <el-button @click="fetchList">刷新列表</el-button>
+    <el-input v-model.trim="content" />
     <img alt="Vue logo" src="./assets/logo.png" @click="request">
-    <HelloWorld msg="W  elcome to Your Vue.js App-hello world"/>
-    <router-link to="/foo">Go to Foo</router-link>
-    <router-link to="/bar">Go   to Bar</router-link>
+
+    <hr><router-link to="/foo">Go to Foo</router-link>
+    <hr><router-link to="/bar">Go to Bar</router-link>
     <div>below is router view</div>
     <router-view></router-view>
+    <ul>
+      <li v-for="item in allNotes" :key="item.id">{{item.id+": "+item.content}}</li>
+    </ul>
   </div>
 </template>
 
 <script>
 import { Button, Input } from 'element-ui';
-import HelloWorld from './components/HelloWorld.vue';
 
 const axios = require('axios');
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    // HelloWorld,
     ElButton: Button,
     ElInput: Input,
   },
   data() {
     return {
       content: null,
+      allNotes: [],
     };
   },
   methods: {
     request() {
-      axios.get('/api/notesAdd', { params: { name: 'hello', age: 12, content: this.content } }).then(() => {
+      if (this.content) {
+        axios.get('/api/notesAdd', { params: { name: 'hello', age: 12, content: this.content } }).then(() => {
         // console.log("success");
+        });
+      }
+    },
+    fetchList() {
+      axios.get('/api/notesAll').then((res) => {
+        this.allNotes = res.data.result;
       });
     },
+  },
+  created() {
+    this.fetchList();
   },
 };
 </script>

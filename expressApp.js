@@ -16,10 +16,10 @@ app.use('/api', router);
 app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
-app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
 app.listen(5000, () => {
   console.log('listening on port: 5000');
 });
+app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
 
 app.get(/^\/bee\/portal.*/, (req, res) => {
   res.sendFile(`${__dirname}/static/index.html`);
