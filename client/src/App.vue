@@ -11,9 +11,10 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
 import { Button } from 'element-ui';
-const axios =   require('axios');
+import HelloWorld from './components/HelloWorld.vue';
+
+const axios = require('axios');
 
 export default {
   name: 'App',
@@ -23,12 +24,12 @@ export default {
   },
   methods: {
     request() {
-      axios.get("/api/sql").then(() =>   {
+      axios.get('/api/sql', { params: { name: 'hello', age: 12 } }).then(() => {
         // console.log("success");
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
