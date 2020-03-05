@@ -11,5 +11,5 @@ module.exports = {
       },
     },
   },
-  outputDir: '../static',
+  outputDir: '../server/static',
 };
