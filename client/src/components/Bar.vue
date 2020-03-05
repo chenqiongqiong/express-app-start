@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  name: 'bar-component'
-}
+  name: 'bar-component',
+};
 </script>
