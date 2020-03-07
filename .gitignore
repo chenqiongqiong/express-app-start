@@ -2,6 +2,7 @@
 node_modules
 client/node_modules
 server/static
+server/uploads
 /public
 
 # local env files

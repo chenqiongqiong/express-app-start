@@ -6,11 +6,16 @@
         <el-button><router-link to="/bar">Go to Bar</router-link></el-button>
         <div>below is router view</div>
         <router-view></router-view> -->
-        <form action="/api/addNotes"  method="POST" enctype="multipart/form-data">
+        <!-- <form action="/api/addNotes"  method="POST" enctype="multipart/form-data">
           <input name="name" type="text">
           <input name="password" type="text">
           <button type="submit">  submit </button>
-      </form>
+        </form> -->
+        <form action="/api/upload" method="post" enctype="multipart/form-data" target="_blank">
+          <input type="file" name="avatar" />
+          <button type="submit">  upload </button>
+        </form>
+
       </section>
       <section class="body">
         <el-button @click="fetchList()">刷新列表</el-button>
