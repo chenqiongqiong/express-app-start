@@ -2,10 +2,15 @@
   <div id="app">
     <section class="container">
       <section class="header">
-        <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
+        <!-- <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
         <el-button><router-link to="/bar">Go to Bar</router-link></el-button>
         <div>below is router view</div>
-        <router-view></router-view>
+        <router-view></router-view> -->
+        <form action="/api/addNotes"  method="POST" enctype="multipart/form-data">
+          <input name="name" type="text">
+          <input name="password" type="text">
+          <button type="submit">  submit </button>
+      </form>
       </section>
       <section class="body">
         <el-button @click="fetchList()">刷新列表</el-button>
@@ -91,13 +96,27 @@ export default {
 
       // });
       axios.request({
-        url: '/api/addNotes?test=123',
+        url: '/api/addNotes',
         method: 'post',
+        // headers: {
+        //   'Content-Type': 'application/x-www-form-urlencoded',
+        // },
+        // data: 'name=hello',
+
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+        // data: {
+        //   'name': 'hello',
+        // },
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          // 'Content-Type': 'application/json',
+          // 'Content-Type': 'multipart/form-data',
         },
-        data: 'name=hello',
+        // data: {
+        //   'name': 'hello',
+        // },
+        // data: 'name=hello&age=123',
+        data,
       });
     },
     addNotes() {

@@ -9,9 +9,17 @@ const pool = mysql.createPool($config.mysql);
 module.exports = {
   addNotes: (req, res, next) => {
     pool.getConnection((err, connection) => {
-      connection.query($sql.notesInsert, [req.query.content], (error, result) => {
+      const { content } = req.query;
+      if (!content) {
+        return res.json({
+          code: 201,
+          msg: 'fail, no centent got',
+        });
+      }
+      return connection.query($sql.notesInsert, [req.query.contenT], (error, result) => {
         if (result) {
           res.json({
+            code: 200,
             msg: 'success',
             result,
           });
