@@ -22,15 +22,29 @@ module.exports = {
   },
   notesAll: (req, res, next) => {
     pool.getConnection((err, connection) => {
-      connection.query($sql.notesAll, [], (error, result) => {
-        if (result) {
-          res.json({
-            code: 200,
-            msg: '获取列表成功',
-            result,
-          });
-          connection.release();
-        }
+      const offset = (req.query.pageSize || 15) * (req.query.currentPage - 1);
+      const fetchList = new Promise((resolve, reject) => {
+        connection.query($sql.notesAll, [offset, Number(req.query.pageSize)], (error, result) => {
+          if (result) {
+            resolve(result);
+          }
+        });
+      });
+      const fetchTotal = new Promise((resolve, reject) => {
+        connection.query($sql.notesTotal, [], (error, result) => {
+          if (result) {
+            resolve(result[0].total);
+          }
+        });
+      });
+      Promise.all([fetchList, fetchTotal]).then(([list, total]) => {
+        res.json({
+          code: 200,
+          msg: 'success',
+          list,
+          total,
+        });
+        connection.release();
       });
     });
   },

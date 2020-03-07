@@ -1,46 +1,63 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <el-button @click="fetchList">刷新列表</el-button>
-
-    <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
-    <el-button><router-link to="/bar">Go to Bar</router-link></el-button>
-
-    <div>below is router view</div>
-    <router-view></router-view>
-
-    <table>
-      <thead>
-        <tr><td>id</td><td>content</td><td>actions</td></tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item) in allNotes" :key="item.id">
-          <td>{{item.id}}</td>
-          <td>
-            <el-input v-model="item.content"></el-input>
-          </td>
-          <td>
-            <el-button @click="updateNote(item.content, item.id)">update</el-button>
-            <el-button @click="deleteNotes(item.id)">delete</el-button>
-          </td>
-        </tr>
-        <tr v-show="adding">
-          <td></td>
-          <td>
-            <el-input v-model.trim="newContent"></el-input>
-          </td>
-          <td>
-            <el-button @click="addNotes(newContent)">add</el-button>
-          </td>
-        </tr>
-      </tbody>
-      <el-button @click="setNewNote" :disabled="adding">add</el-button>
-    </table>
+    <section class="container">
+      <section class="header">
+        <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
+        <el-button><router-link to="/bar">Go to Bar</router-link></el-button>
+        <div>below is router view</div>
+        <router-view></router-view>
+      </section>
+      <section class="body">
+        <el-button @click="fetchList()">刷新列表</el-button>
+        <el-button @click="testFomrData()">test formdata</el-button>
+        <table>
+          <thead>
+            <tr><td>id</td><td>content</td><td>datetime</td><td>actions</td></tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item) in allNotes" :key="item.id">
+              <td>{{item.id}}</td>
+              <td>
+                <el-input v-model="item.content"></el-input>
+              </td>
+              <td>
+                {{new Date(item.datetime).toLocaleString()}}
+              </td>
+              <td>
+                <el-button @click="updateNote(item.content, item.id)">update</el-button>
+                <el-button @click="deleteNotes(item.id)">delete</el-button>
+              </td>
+            </tr>
+            <tr v-show="adding">
+              <td></td>
+              <td>
+                <el-input v-model.trim="newContent"></el-input>
+              </td>
+              <td>
+                <el-button @click="addNotes(newContent)">add</el-button>
+              </td>
+            </tr>
+          </tbody>
+          <el-button @click="setNewNote" :disabled="adding" v-if="allNotes.length!==15">add</el-button>
+        </table>
+      </section>
+      <section class="footer">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          @current-change="handlePageChange"
+          :page-size="pageSize"
+          :total="total">
+        </el-pagination>
+      </section>
+    </section>
   </div>
 </template>
 
 <script>
-import { Button, Input, Message } from 'element-ui';
+import {
+  Button, Input, Message, Pagination,
+} from 'element-ui';
 
 const axios = require('axios');
 
@@ -49,15 +66,40 @@ export default {
   components: {
     ElButton: Button,
     ElInput: Input,
+    ElPagination: Pagination,
   },
   data() {
     return {
       newContent: null,
       allNotes: [],
+      total: 0,
       adding: false,
+      currentPage: 1,
+      pageSize: 15,
     };
   },
   methods: {
+    testFomrData() {
+      const data = new FormData();
+      data.append('name', 'hello express');
+      // axios.post('/api/addNotes?test=123', {
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //     // 'Content-Type': 'application/json',
+      //   },
+      // }).then((res) => {
+
+      // });
+      axios.request({
+        url: '/api/addNotes?test=123',
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          // 'Content-Type': 'application/json',
+        },
+        data: 'name=hello',
+      });
+    },
     addNotes() {
       if (this.newContent) {
         axios.get(`/api/addNotes?content=${this.newContent}`).then((res) => {
@@ -68,9 +110,10 @@ export default {
         });
       }
     },
-    fetchList() {
-      axios.get('/api/notesAll').then((res) => {
-        this.allNotes = res.data.result;
+    fetchList(currentPage = this.currentPage, pageSize = 15) {
+      axios.get(`/api/notesAll?pageSize=${pageSize}&currentPage=${currentPage}`).then((res) => {
+        this.allNotes = res.data.list;
+        this.total = res.data.total;
       });
     },
     deleteNotes(id) {
@@ -87,6 +130,10 @@ export default {
     setNewNote() {
       this.adding = true;
     },
+    handlePageChange(page) {
+      this.currentPage = page;
+      this.fetchList();
+    },
   },
   created() {
     this.fetchList();
@@ -94,14 +141,57 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+body {
+  margin: 0;
+}
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #aaa;
+  border-radius: 2px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 4px;
+}
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  .container {
+    padding: 15px;
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .header {
+      flex: 0 0 auto;
+    }
+    .body {
+      flex: 1 1 auto;
+      overflow: auto;
+      border: 1px solid #999;
+      margin: 15px 0;
+      table {
+        table-layout: fixed;
+        width: 100%;
+      }
+    }
+    .footer {
+      flex: 0 0 auto;
+    }
+  }
   table, th, td  {
     border: 1px solid #999;
     padding: 5px;
