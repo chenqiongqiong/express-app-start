@@ -16,7 +16,7 @@ module.exports = {
           msg: 'fail, no centent got',
         });
       }
-      return connection.query($sql.notesInsert, [req.query.contenT], (error, result) => {
+      return connection.query($sql.notesInsert, [req.query.content], (error, result) => {
         if (result) {
           res.json({
             code: 200,
