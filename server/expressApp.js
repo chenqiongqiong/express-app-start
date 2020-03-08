@@ -47,6 +47,9 @@ app.get(/^\/bee\/portal.*/, (req, res) => {
   res.sendFile(`${__dirname}/static/index.html`);
 });
 
+app.get('/', (req, res) => {
+  res.end('hello world');
+});
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
