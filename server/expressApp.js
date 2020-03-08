@@ -1,15 +1,24 @@
+const fs = require('fs');
 const createError = require('http-errors');
+const http = require('http');
+const https = require('https');
 const express = require('express');
+// var cookieParser = require('cookie-parser');
+// var logger = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
 const router = require('./routes/index.js');
-// var cookieParser = require('cookie-parser');
-// var logger = require('morgan');
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+
+const privateKey = fs.readFileSync('./config/ssl/server.key', 'utf8');
+const certificate = fs.readFileSync('./config/ssl/server.crt', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
 
 // for parsing application/json
 app.use(bodyParser.json());
@@ -23,9 +32,15 @@ app.use('/api', router);
 // app.use(logger('dev'));
 app.use(express.json());
 // app.use(cookieParser());
-app.listen(5000, () => {
-  console.log('listening on port: 5000');
-});
+// app.listen(5000, () => {
+//   console.log('listening on port: 5000');
+// });
+
+
+httpServer.listen(8080);
+httpsServer.listen(8443);
+
+
 app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
 
 app.get(/^\/bee\/portal.*/, (req, res) => {
