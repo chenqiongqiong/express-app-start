@@ -37,8 +37,8 @@ app.use(express.json());
 // });
 
 
-httpServer.listen(8080);
-httpsServer.listen(8443);
+httpServer.listen(80);
+httpsServer.listen(443);
 
 
 app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
