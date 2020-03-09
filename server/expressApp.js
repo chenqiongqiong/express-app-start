@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', router);
 app.use(express.json());
 
-httpServer.listen(5000);
+httpServer.listen(3000);
 httpsServer.listen(443);
 
 // app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
