@@ -13,6 +13,7 @@
     "no-alert": "warn",
     "no-console": "off",
     "no-cond-assign": "off",
+    "no-unused-vars": "warn",
     "no-use-before-define": "off",
     "no-param-reassign": "off",
     "global-require": "off",

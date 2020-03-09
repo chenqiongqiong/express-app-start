@@ -6,53 +6,36 @@ const express = require('express');
 // var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
 const bodyParser = require('body-parser');
-const path = require('path');
+// const path = require('path');
 const router = require('./routes/index.js');
-
 
 const privateKey = fs.readFileSync('./config/ssl/server.key', 'utf8');
 const certificate = fs.readFileSync('./config/ssl/server.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
-
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
 
-// for parsing application/json
 app.use(bodyParser.json());
-// for parsing application/x-www-
-// app.use(bodyParser.urlencoded({ extended: true, type: 'application/x-www-form-urlencoded' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.use('/api', router);
-
-// app.use(logger('dev'));
 app.use(express.json());
-// app.use(cookieParser());
-// app.listen(5000, () => {
-//   console.log('listening on port: 5000');
-// });
 
-
-httpServer.listen(80);
+httpServer.listen(5000);
 httpsServer.listen(443);
 
+// app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
+// app.get(/^\/bee\/portal.*/, (req, res) => {
+//   res.sendFile(`${__dirname}/static/index.html`);
+// });
 
-app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
+// app.get('/', (req, res) => {
+//   res.end('hello world');
+// });
 
-app.get(/^\/bee\/portal.*/, (req, res) => {
-  res.sendFile(`${__dirname}/static/index.html`);
-});
-
-app.get('/', (req, res) => {
-  res.end('hello world');
-});
-
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -70,5 +53,3 @@ app.use((req, res, next) => {
 //   res.status(err.status || 500);
 //   res.render('error');
 // });
-
-// module.exports = app;

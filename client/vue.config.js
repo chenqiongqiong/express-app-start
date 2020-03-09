@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/bee/portal/',
+  publicPath: './',
   devServer: {
     proxy: {
       '/api': {
@@ -11,6 +11,6 @@ module.exports = {
       },
     },
   },
-  outputDir: '../server/static',
+  outputDir: './dist',
   productionSourceMap: false,
 };

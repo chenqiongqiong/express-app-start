@@ -2,15 +2,11 @@
   <div id="app">
     <section class="container">
       <section class="header">
-        <!-- <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
+        <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
         <el-button><router-link to="/bar">Go to Bar</router-link></el-button>
         <div>below is router view</div>
-        <router-view></router-view> -->
-        <!-- <form action="/api/addNotes"  method="POST" enctype="multipart/form-data">
-          <input name="name" type="text">
-          <input name="password" type="text">
-          <button type="submit">  submit </button>
-        </form> -->
+        <router-view></router-view>
+
         <form action="/api/upload" method="post" enctype="multipart/form-data" target="_blank">
           <input type="file" name="avatar" />
           <button type="submit">  upload </button>
