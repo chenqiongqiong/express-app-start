@@ -25,7 +25,7 @@ routesArray.forEach((route) => {
   });
 });
 
-router.post('/upload', myMulter.single('avatar'), (req, res) => {
+router.post('/upload', myMulter.single('file'), (req, res) => {
   res.json({ msg: 123 });
 });
 

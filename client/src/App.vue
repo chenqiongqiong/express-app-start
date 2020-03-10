@@ -7,15 +7,12 @@
         <div>below is router view</div>
         <router-view></router-view>
 
-        <form action="/api/upload" method="post" enctype="multipart/form-data" target="_blank">
-          <input type="file" name="avatar" />
-          <button type="submit">  upload </button>
-        </form>
-
+        <input ref="upload" type="file" name="file" />
+        <el-button @click="testFomrData()">formdata上传</el-button>
       </section>
       <section class="body">
         <el-button @click="fetchList()">刷新列表</el-button>
-        <el-button @click="testFomrData()">test formdata</el-button>
+
         <table>
           <thead>
             <tr><td>id</td><td>content</td><td>datetime</td><td>actions</td></tr>
@@ -85,39 +82,21 @@ export default {
     };
   },
   methods: {
-    testFomrData() {
+    testFomrData(e) {
       const data = new FormData();
       data.append('name', 'hello express');
-      // axios.post('/api/addNotes?test=123', {
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded',
-      //     // 'Content-Type': 'application/json',
-      //   },
-      // }).then((res) => {
+      const file = this.$refs.upload.files[0];
+      data.append('file', file);
 
-      // });
       axios.request({
-        url: '/api/addNotes',
+        url: '/api/upload',
         method: 'post',
-        // headers: {
-        //   'Content-Type': 'application/x-www-form-urlencoded',
-        // },
-        // data: 'name=hello',
-
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
-        // data: {
-        //   'name': 'hello',
-        // },
-        headers: {
-          // 'Content-Type': 'multipart/form-data',
-        },
-        // data: {
-        //   'name': 'hello',
-        // },
-        // data: 'name=hello&age=123',
         data,
+      }).then((res) => {
+        console.log(res);
+        if (res.data.msg === 123) {
+          this.$refs.upload.value = null;
+        }
       });
     },
     addNotes() {
