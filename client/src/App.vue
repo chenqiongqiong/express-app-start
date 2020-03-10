@@ -122,7 +122,7 @@ export default {
     },
     addNotes() {
       if (this.newContent) {
-        axios.get(`/api/addNotes?content=${this.newContent}`).then((res) => {
+        axios.post('/api/addNotes', { content: this.newContent }).then((res) => {
           Message.success(res.data.msg);
           this.newContent = null;
           this.fetchList();
