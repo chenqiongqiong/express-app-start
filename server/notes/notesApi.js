@@ -9,7 +9,6 @@ const pool = mysql.createPool($config.mysql);
 module.exports = {
   addNotes: (req, res, next) => {
     pool.getConnection((err, connection) => {
-      console.log(req.body);
       const { content } = req.body;
       if (!content) {
         return res.json({
