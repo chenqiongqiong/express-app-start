@@ -93,7 +93,6 @@ export default {
         method: 'post',
         data,
       }).then((res) => {
-        console.log(res);
         if (res.data.msg === 123) {
           this.$refs.upload.value = null;
         }
