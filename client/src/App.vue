@@ -1,5 +1,31 @@
 <template>
   <div id="app">
+    <div class="test">
+    <el-button @click="isMoving=true">set isMoving</el-button>
+    <div class="control">
+      <div class="control-item">
+        x <el-slider :step="0.01" :min="0" :max="1" v-model="x"></el-slider>
+      </div>
+      <div class="control-item">
+        y <el-slider :step="0.01" :min="0" :max="1" v-model="y" ></el-slider>
+      </div>
+      <div class="control-item">
+        z <el-slider :step="0.01" :min="0" :max="1" v-model="z"></el-slider>
+      </div>
+      <div class="control-item">
+        angle <el-slider :min="0" :max="360" v-model="angle" ></el-slider>
+      </div>
+    </div>
+    <div class="box" :style="styleObj" :class="{moving: isMoving}">
+      <div class="face front">front</div>
+      <div class="face right">right</div>
+      <div class="face left">left</div>
+      <div class="face top">top</div>
+      <div class="face bottom">bottom</div>
+      <div class="face back">back</div>
+    </div>
+
+  </div>
     <section class="container">
       <section class="header">
         <el-button><router-link to="/foo">Go to Foo</router-link></el-button>
@@ -59,7 +85,7 @@
 
 <script>
 import {
-  Button, Input, Message, Pagination,
+  Button, Input, Message, Pagination, Slider,
 } from 'element-ui';
 
 const axios = require('axios');
@@ -70,6 +96,7 @@ export default {
     ElButton: Button,
     ElInput: Input,
     ElPagination: Pagination,
+    ElSlider: Slider,
   },
   data() {
     return {
@@ -79,6 +106,11 @@ export default {
       adding: false,
       currentPage: 1,
       pageSize: 15,
+      x: 0,
+      y: 0,
+      z: 0,
+      angle: 0,
+      isMoving: false,
     };
   },
   methods: {
@@ -136,6 +168,13 @@ export default {
   created() {
     this.fetchList();
   },
+  computed: {
+    styleObj() {
+      return {
+        transform: `rotate3d(${this.x}, ${this.y}, ${this.z}, ${this.angle}deg)`,
+      };
+    },
+  },
 };
 </script>
 
@@ -157,6 +196,78 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #999;
   border-radius: 4px;
+}
+
+
+.test {
+  background: burlywood;
+  opacity: .6;
+  height: 300px;
+  padding: 15px;
+  .control {
+    display: flex;
+    justify-content: space-between;
+    .control-item {
+      flex: auto 1 1;
+      margin: 0 15px;
+    }
+  }
+}
+.moving {
+  animation: move 5s infinite;
+}
+.box {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  left: 100px;
+  top: 90px;
+  // perspective: 550px;
+  transform-style: preserve-3d;
+  .face {
+    opacity: .5;
+    color: #fff;
+    font-size: 19px;
+    background: chartreuse;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: visible;
+  }
+  .front {
+    transform: rotateX(0deg);
+  }
+  .right {
+    transform: translateX(50px) translateZ(-50px) rotateY(90deg);
+    background: hotpink;
+  }
+  .left {
+    transform: translateX(-50px) translateZ(-50px) rotateY(-90deg);
+    background: sienna;
+  }
+  .top {
+    transform: translateY(-50px) translateZ(-50px) rotateX(-90deg);
+    background: aqua;
+  }
+  .bottom {
+    transform: translateY(50px) translateZ(-50px) rotateX(90deg);
+    background: teal;
+  }
+  .back {
+    transform: translateZ(-100px);
+    background: blueviolet;
+  }
+}
+@keyframes move{
+  0% {
+    left: 100px;
+  }
+  50% {
+    left: 600px;
+  }
+  100% {
+    left: 100px;
+  }
 }
 
 
