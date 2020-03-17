@@ -59,28 +59,40 @@ module.exports = {
   notesDeleteById: (req, res, next) => {
     pool.getConnection((err, connection) => {
       connection.query($sql.notesDeleteById, [req.query.id], (error, result) => {
-        if (result) {
+        if (result.affectedRows === 1) {
           res.json({
             code: 200,
             msg: '删除成功',
             result,
           });
-          connection.release();
+        } else {
+          res.json({
+            code: 201,
+            msg: '删除失败',
+            result,
+          });
         }
+        connection.release();
       });
     });
   },
   notesUpdateById: (req, res, next) => {
     pool.getConnection((err, connection) => {
-      connection.query($sql.notesUpdateById, [req.query.content, req.query.id], (error, result) => {
-        if (result) {
+      connection.query($sql.notesUpdateById, [req.body.value, req.body.id], (error, result) => {
+        if (result.affectedRows === 1) {
           res.json({
             code: 200,
             msg: '更新成功',
             result,
           });
-          connection.release();
+        } else {
+          res.json({
+            code: 201,
+            msg: '更新失败',
+            result,
+          });
         }
+        connection.release();
       });
     });
   },
