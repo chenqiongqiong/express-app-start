@@ -5,9 +5,9 @@
         <el-button @click="testFomrData()">formdata上传</el-button>
       </section>
 
-      <section class="body">
+      <section class="notes-body">
         <el-button @click="fetchList()">刷新列表</el-button>
-        <img src="../assets/logo.png" alt="">
+        <!-- <img src="../assets/logo.png" alt=""> -->
         <table class="notes-table">
           <thead>
             <tr><td>id</td><td>content</td><td>datetime</td><td>actions</td></tr>
@@ -100,10 +100,12 @@ export default {
       });
     },
     startLoading() {
-      this.loadingInstance = Loading.service({ target: '.notes-table' });
+      this.loadingInstance = Loading.service({ target: '.notes-body' });
     },
     endLoading() {
-      this.loadingInstance.close();
+      if (this.loadingInstance) {
+        this.loadingInstance.close();
+      }
     },
     addNotes() {
       if (this.newContent) {
@@ -117,6 +119,7 @@ export default {
     },
     fetchList(currentPage = this.currentPage, pageSize = 15) {
       this.startLoading();
+      this.allNotes = [];
       axios.get('/api/notesAll', {
         params: {
           pageSize,
@@ -125,6 +128,7 @@ export default {
       }).then((res) => {
         this.allNotes = res.data.list;
         this.total = res.data.total;
+      }).finally(() => {
         this.endLoading();
       });
     },
@@ -154,18 +158,16 @@ export default {
     },
   },
   created() {
-    // this.fetchList();
     const customerData = [
       {
-        // ssn: new Date().getTime(), name: 'Bill', email: Math.random(), test: `test${Math.random()}`,
-        ssn: 666, name: 'Bill', email: Math.random(), test: `test${Math.random()}`,
+        ssn: new Date().getTime(), name: `Bill${Math.random()}`, email: Math.random(), test: `test${Math.random()}`,
+        // ssn: 666, name: 'Bill', email: Math.random(), test: `test${Math.random()}`,
       },
     ];
     const dbName = 'the_name';
-    const request = indexedDB.open(dbName, 4);
+    const request = indexedDB.open(dbName, 5);
 
     request.onerror = (event) => {
-      // 错误处理
       console.log(event);
     };
     request.onsuccess = (event) => {
@@ -174,9 +176,9 @@ export default {
       db.onerror = (error) => {
         // console.log(error);
       };
-      db.transaction('customers').objectStore('customers').get(1584197139013).onsuccess = (res) => {
-        // console.log(res.target.result);
-      };
+      // db.transaction('customers').objectStore('customers').get(1584197139013).onsuccess = (res) => {
+      //   // console.log(res.target.result);
+      // };
       const customerObjectStore = db.transaction(['customers'], 'readwrite').objectStore('customers');
       customerData.forEach((customer) => {
         const r = customerObjectStore.put(customer);
@@ -187,28 +189,26 @@ export default {
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      console.log('onupgradeneeded');
       // 建立一个对象仓库来存储我们客户的相关信息，我们选择 ssn 作为键路径（key path）
       // 因为 ssn 可以保证是不重复的
-      // const objectStore = db.createObjectStore('customers', { keyPath: 'ssn' });
+      const storeName = 'customers';
+      let objectStore;
+      try {
+        objectStore = db.createObjectStore('customers', { keyPath: 'ssn' });
+        objectStore.createIndex('test', 'test', { unique: false });
+        objectStore.createIndex('name', 'name', { unique: false });
+        // 使用邮箱建立索引，我们向确保客户的邮箱不会重复，所以我们使用 unique 索引
+        objectStore.createIndex('email', 'email', { unique: true });
+      } catch (err) {
+        objectStore = request.transaction.objectStore('customers');
+      }
       // const objectStore = db.objectStore('customers');
-      // const objectStore = request.transaction.objectStore('customers');
-
-      // // 建立一个索引来通过姓名来搜索客户。名字可能会重复，所以我们不能使用 unique 索引
-      // objectStore.createIndex('test', 'test', { unique: false });
-
-      // // 使用邮箱建立索引，我们向确保客户的邮箱不会重复，所以我们使用 unique 索引
-      // objectStore.createIndex('email', 'email', { unique: true });
 
       // 使用事务的 oncomplete 事件确保在插入数据前对象仓库已经创建完毕
-      // objectStore.transaction.oncomplete = () => {
-      //   // 将数据保存到新创建的对象仓库
-      //   console.log('successfully add tedst into db');
-      // };
-      // const customerObjectStore = db.transaction('customers', 'readwrite').objectStore('customers');
-      // customerData.forEach((customer) => {
-      //   customerObjectStore.add(customer);
-      // });
+      objectStore.transaction.oncomplete = () => {
+        // 将数据保存到新创建的对象仓库
+        console.log('successfully add tedst into db');
+      };
     };
   },
   computed: {
@@ -265,7 +265,7 @@ body {
   .header {
     flex: 0 0 auto;
   }
-  .body {
+  .notes-body {
     flex: 1 1 auto;
     overflow: auto;
     border: 1px solid #999;
