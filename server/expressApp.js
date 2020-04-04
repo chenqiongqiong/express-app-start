@@ -1,10 +1,12 @@
 const createError = require('http-errors');
 const http = require('http');
+const path = require('path');
 const express = require('express');
 // var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
 // const bodyParser = require('body-parser');
 const router = require('./routes/index.js');
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -17,9 +19,7 @@ app.use('/api', router);
 httpServer.listen(3000);
 
 // app.use('/bee/portal', express.static(path.join(__dirname, 'static')));
-// app.get(/^\/bee\/portal.*/, (req, res) => {
-//   res.sendFile(`${__dirname}/static/index.html`);
-// });
+app.use('/api/image', express.static(path.join(__dirname, 'uploads')));
 
 // app.get('/', (req, res) => {
 //   res.end('hello world');

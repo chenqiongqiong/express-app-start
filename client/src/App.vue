@@ -1,5 +1,6 @@
 <template>
   <div id="container">
+    <img :src="imgURL" alt="">
     <section class="menu">
       <el-button><router-link to="/main">Go to Main</router-link></el-button>
       <el-button><router-link to="/test">Go to Test</router-link></el-button>
@@ -16,7 +17,7 @@
 import {
   Button,
 } from 'element-ui';
-
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -24,7 +25,29 @@ export default {
     ElButton: Button,
   },
   data() {
-    return {};
+    return {
+      imgURL: '',
+    };
+  },
+  mounted() {
+    this.getImgUrl();
+  },
+  methods: {
+    getImgUrl() {
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.open('GET', '/api/image/1.jpg', true);
+      xmlhttp.responseType = 'blob';
+      xmlhttp.onload = () => {
+        if (xmlhttp.status === 200) {
+          const blob = xmlhttp.response;
+          // img.onload = function rr(e) {
+          //   window.URL.revokeObjectURL(img.src);
+          // };
+          this.imgURL = window.URL.createObjectURL(blob);
+        }
+      };
+      xmlhttp.send();
+    },
   },
 };
 </script>

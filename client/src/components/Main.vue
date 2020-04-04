@@ -88,7 +88,6 @@ export default {
       data.append('name', 'hello express');
       const file = this.$refs.upload.files[0];
       data.append('file', file);
-
       axios.request({
         url: '/api/upload',
         method: 'post',
@@ -139,9 +138,6 @@ export default {
       });
     },
     updateNote(value, id) {
-      // axios.get(`/api/notesUpdateById?content=${value}&id=${id}`).then((res) => {
-      //   Message.success(res.data.msg);
-      // });
       axios.post('/api/notesUpdateById', {
         id,
         value,
@@ -215,23 +211,83 @@ export default {
   },
   mounted() {
     this.fetchList();
-    // const oReq = new XMLHttpRequest();
-    // oReq.open('GET', '/img/logo.82b9c7a5.png', true);
-    // oReq.responseType = 'blob';
 
-    // oReq.onload = (oEvent) => {
-    //   console.log(oEvent);
-    //   const url = URL.createObjectURL(oReq.response);
-    //   const blob = oReq.response;
-    //   console.log(blob);
-    //   console.log(url);
-    // };
+    function dataURItoBlob(dataURI) {
+      let byteString;
+      if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+        byteString = atob(dataURI.split(',')[1]);
+      } else {
+        byteString = unescape(dataURI.split(',')[1]);
+      }
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const ia = new Uint8Array(byteString.length);
+      for (let i = 0; i < byteString.length; i += 1) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ia], { type: mimeString });
+    }
 
-    // oReq.send();
-    const obj = { hello: 'world' };
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    console.log(url);
+
+    const canvas = document.createElement('canvas');
+    document.body.append(canvas);
+    const height = 200;
+    const width = 200;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext('2d');
+
+    ctx.strokeStyle = '#090';
+    ctx.beginPath();
+    ctx.arc(width / 2, height / 2, width / 2 - width / 10, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const dataURL = canvas.toDataURL('image/png', 1);
+    const blob = dataURItoBlob(dataURL);
+    const data = new FormData();
+    data.append('name', 'hello express');
+    data.append('file', blob, '123.png');
+    axios.request({
+      url: '/api/upload',
+      method: 'post',
+      data,
+    }).then((res) => {
+      // console.log(res);
+    });
+
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', '/api/image/file-1585840953188-196-123.png', true);
+    xhr.responseType = 'blob';
+    xhr.onload = function r() {
+      if (this.status === 200) {
+        // eslint-disable-next-line no-shadow
+        const blob = this.response;
+
+        const img = document.createElement('img');
+        img.onload = function rr(e) {
+          window.URL.revokeObjectURL(img.src); // 清除释放
+        };
+        img.src = window.URL.createObjectURL(blob);
+        document.body.appendChild(img);
+
+
+        const reader = new FileReader();
+        reader.onload = function rrr() {
+          // console.log(reader.result);
+          // console.log(dataURItoBlob(reader.result));
+        };
+        reader.readAsDataURL(blob);
+      }
+    };
+    xhr.send();
+
+
+    // const obj = { hello: 'world' };
+    // const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+    // const url = URL.createObjectURL(blob);
+    // console.log(url);
   },
 };
 </script>
